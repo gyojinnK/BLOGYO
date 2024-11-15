@@ -1,0 +1,54 @@
+{
+  "name": "my-gatsby-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "my-gatsby-site",
+  "author": "minsong",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@contentful/rich-text-react-renderer": "^16.0.0",
+    "@contentful/rich-text-types": "^17.0.0",
+    "@egjs/react-infinitegrid": "^4.12.0",
+    "babel-plugin-styled-components": "^2.1.4",
+    "dotenv": "^16.4.5",
+    "gatsby": "^5.14.0",
+    "gatsby-plugin-canonical-urls": "^5.14.0",
+    "gatsby-plugin-image": "^3.14.0",
+    "gatsby-plugin-robots-txt": "^1.8.0",
+    "gatsby-plugin-sharp": "^5.14.0",
+    "gatsby-plugin-sitemap": "^6.14.0",
+    "gatsby-plugin-styled-components": "^6.14.0",
+    "gatsby-source-contentful": "^8.14.0",
+    "gatsby-source-filesystem": "^5.14.0",
+    "gatsby-transformer-sharp": "^5.14.0",
+    "prismjs": "^1.29.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.3.0",
+    "styled-components": "^6.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/prismjs": "^1.26.5",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "prettier": "^3.3.3",
+    "typescript": "^5.3.3"
+  }
+}
