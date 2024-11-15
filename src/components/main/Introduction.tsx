@@ -49,7 +49,7 @@ const Introduction = () => {
       </ProfileImage>
 
       <SubText>Nice to Meet you!</SubText>
-      <MainText>I'm Junior Frontend Developer gyojinnk</MainText>
+      <MainText>Junior Frontend Developer gyojinnk</MainText>
     </div>
   )
 }
