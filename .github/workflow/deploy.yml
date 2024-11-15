@@ -27,5 +27,3 @@ jobs:
           access-token: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
           deploy-branch: main  # main 브랜치에 빌드 파일을 푸쉬하도록 설정
           gatsby-args: --verbose  # 빌드 과정 출력
-
-          # 깃헙 env 설정
