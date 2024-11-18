@@ -44,9 +44,6 @@ const Header = () => {
           <AiFillGithub />
         </a>
         <a href="#" target="_blank">
-          <AiOutlineInstagram />
-        </a>
-        <a href="#" target="_blank">
           <AiFillLinkedin />
         </a>
       </Menu>

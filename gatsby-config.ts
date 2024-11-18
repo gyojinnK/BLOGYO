@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
-const SITE_URL = `https://BLOGYO.vercel.app`
+const SITE_URL = `https://blogyo.vercel.app`
 
 const config: GatsbyConfig = {
   siteMetadata: {

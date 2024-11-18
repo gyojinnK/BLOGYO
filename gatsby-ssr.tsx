@@ -6,7 +6,7 @@ const HeadComponents = [
     rel="stylesheet"
     as="style"
     crossOrigin="anonymous"
-    href="<https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css>"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
     key="pretendard-font"
   />,
 ]

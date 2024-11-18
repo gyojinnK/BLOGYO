@@ -30,7 +30,7 @@ const SubText = styled.div`
 
 const MainText = styled.div`
   font-size: 40px;
-  font-weight: 800;
+  font-weight: 700;
 
   @media (max-width: 1024px) {
     font-size: 30px;
@@ -48,7 +48,7 @@ const Introduction = () => {
         <StaticImage src="../../images/gyojinnk-thumb.png" alt="profile" />
       </ProfileImage>
 
-      <SubText>Nice to Meet you!</SubText>
+      <SubText>Keep Growing!</SubText>
       <MainText>Junior Frontend Developer gyojinnk</MainText>
     </div>
   )
