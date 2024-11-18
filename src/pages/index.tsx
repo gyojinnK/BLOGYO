@@ -7,22 +7,10 @@ import Seo from '../components/common/Seo'
 
 const Index = ({
   data: {
-    allContentfulPost: { nodes },
+    allContentfulPost: { nodes, pageInfo },
   },
 }: PageProps<Queries.IndexPageQuery>) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
-
-  const categories = nodes.reduce<Record<string, number>>(
-    (categories, post) => {
-      post.category
-        ?.filter((category): category is string => !!category)
-        .forEach(
-          category => (categories[category] = (categories[category] ?? 0) + 1),
-        )
-      return categories
-    },
-    { All: nodes.length },
-  )
 
   const posts = nodes.filter(
     ({ category }) =>
@@ -37,12 +25,15 @@ const Index = ({
     <>
       <Introduction />
       <Category
-        categories={categories}
         selectedCategory={selectedCategory}
         handleSelect={handleSelectCategory}
       />
 
-      <PostList posts={posts} />
+      <PostList
+        posts={posts}
+        pageInfo={pageInfo}
+        selectedCategory={selectedCategory}
+      />
     </>
   )
 }
@@ -52,15 +43,21 @@ export default Index
 export const Head: HeadFC = () => <Seo />
 
 export const query = graphql`
-  query IndexPage {
-    allContentfulPost(sort: { date: DESC }) {
+  query IndexPage($skip: Int = 0, $limit: Int = 5) {
+    allContentfulPost(skip: $skip, limit: $limit) {
+      pageInfo {
+        pageCount
+        totalCount
+        currentPage
+        hasNextPage
+      }
       nodes {
         title
         category
         slug
         date
         thumbnail {
-          gatsbyImageData(width: 500)
+          gatsbyImageData
         }
         description {
           description

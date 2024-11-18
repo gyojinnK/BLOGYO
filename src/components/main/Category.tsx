@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 interface CategoryProps {
-  categories: Record<string, number>
   selectedCategory: string
   handleSelect: (category: string) => void
 }
@@ -36,10 +36,52 @@ const Item = styled.div<{ $selected: boolean }>`
 `
 
 const Category: React.FC<CategoryProps> = ({
-  categories,
   selectedCategory,
   handleSelect,
 }) => {
+  const [categories, setCategories] = useState<Record<string, number>>({})
+
+  const fetchCategories = async () => {
+    const result = await fetch('/___graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `
+          query MyQuery {
+            allContentfulPost {
+              nodes {
+                category
+              }
+            }
+          }
+        `,
+      }),
+    })
+
+    const data = await result.json()
+    const categories: Record<string, number> =
+      data.data.allContentfulPost.nodes.reduce(
+        (
+          categories: Record<string, number>,
+          post: Queries.IndexPageQuery['allContentfulPost']['nodes'][0],
+        ) => {
+          post.category
+            ?.filter((category): category is string => !!category)
+            .forEach(
+              category =>
+                (categories[category] = (categories[category] ?? 0) + 1),
+            )
+          return categories
+        },
+        { All: data.data.allContentfulPost.nodes.length },
+      )
+    setCategories(categories)
+  }
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
   return (
     <Wrapper>
       {Object.entries(categories).map(([category, count]) => (
