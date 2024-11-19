@@ -1,7 +1,10 @@
 export const fetchAllPosts = async () => {
-  const result = await fetch('/___graphql', {
+  const result = await fetch('https://blogyo.vercel.app/___graphql', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
+    },
     body: JSON.stringify({
       query: `
         query MyQuery {
@@ -31,6 +34,7 @@ export const fetchAllPosts = async () => {
   })
 
   const data = await result.json()
+  console.log(data)
   return {
     posts: data.data.allContentfulPost.nodes,
     pageInfo: data.data.allContentfulPost.pageInfo,
