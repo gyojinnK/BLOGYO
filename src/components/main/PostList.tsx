@@ -4,7 +4,7 @@ import PostItem from './PostItem'
 import { useInView } from 'react-intersection-observer'
 import { IGatsbyImageData } from 'gatsby-plugin-image'
 import useInfiniteScroll from '../../hooks/useInfiniteScroll'
-import { fetchAllPosts, fetchCategoryPosts } from '../../api'
+import { fetchAllPosts, fetchCategoryPosts } from '../../servers'
 import { Queries } from '../../types/graphql-types'
 
 interface PostListProps {
