@@ -43,7 +43,10 @@ const Header = () => {
         <a href="https://github.com/gyojinnK" target="_blank">
           <AiFillGithub />
         </a>
-        <a href="#" target="_blank">
+        <a
+          href="https://www.linkedin.com/in/%EA%B5%90%EC%A7%84-%EA%B0%95-68a6282b7/"
+          target="_blank"
+        >
           <AiFillLinkedin />
         </a>
       </Menu>
