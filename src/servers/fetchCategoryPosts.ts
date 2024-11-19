@@ -3,40 +3,46 @@ export const fetchCategoryPosts = async (
   skip: number = 0,
   limit: number = 5,
 ) => {
-  const result = await fetch(
-    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
-      },
-      body: JSON.stringify({
-        query: `
-        query MyQuery($category: String!, $skip: Int!, $limit: Int!) {
-          postCollection(limit: $limit, skip: $skip, where: { category_contains: $category }) {
-            total
-            items {
-              title
-              category
-              slug
-              date
-              thumbnail {
-                url
-              }
-              description
-            }
+  const query = `
+    query MyQuery($category: [String]!, $skip: Int!, $limit: Int!) {
+      postCollection(limit: $limit, skip: $skip, where: { category_contains_all: $category }) {
+        total
+        items {
+          title
+          category
+          slug
+          date
+          description
+          thumbnail {
+            url
           }
         }
-      `,
-        variables: {
-          category,
-          skip,
-          limit,
-        },
-      }),
-    },
+      }
+    }
+  `
+
+  const variables = {
+    category,
+    skip,
+    limit,
+  }
+
+  const url = new URL(
+    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
   )
+  url.searchParams.append('query', query)
+  url.searchParams.append('variables', JSON.stringify(variables))
+  url.searchParams.append(
+    'access_token',
+    process.env.CONTENTFUL_ACCESS_TOKEN || '',
+  )
+
+  const result = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 
   const data = await result.json()
   const total = data.data.postCollection.total

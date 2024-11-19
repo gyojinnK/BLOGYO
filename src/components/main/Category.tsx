@@ -43,28 +43,38 @@ const Category: React.FC<CategoryProps> = ({
   const [categories, setCategories] = useState<Record<string, number>>({})
 
   const fetchCategories = async () => {
-    const result = await fetch('/___graphql', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
+    const query = `
           query MyQuery {
-            allContentfulPost {
-              nodes {
+            postCollection {
+              items {
                 category
               }
             }
           }
-        `,
-      }),
+        `
+
+    const url = new URL(
+      `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+    )
+    url.searchParams.append('query', query)
+    url.searchParams.append(
+      'access_token',
+      process.env.CONTENTFUL_ACCESS_TOKEN || '',
+    )
+
+    const result = await fetch(url.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
 
     const data = await result.json()
     const categories: Record<string, number> =
-      data.data.allContentfulPost.nodes.reduce(
+      data.data.postCollection.items.reduce(
         (
           categories: Record<string, number>,
-          post: Queries.IndexPageQuery['allContentfulPost']['nodes'][0],
+          post: Queries.IndexPageQuery['postCollection']['items'][0],
         ) => {
           post.category
             ?.filter((category): category is string => !!category)
@@ -74,7 +84,7 @@ const Category: React.FC<CategoryProps> = ({
             )
           return categories
         },
-        { All: data.data.allContentfulPost.nodes.length },
+        { All: data.data.postCollection.items.length },
       )
     setCategories(categories)
   }

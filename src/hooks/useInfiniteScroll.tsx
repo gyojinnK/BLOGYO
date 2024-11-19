@@ -1,9 +1,9 @@
 import { Queries } from '../types/graphql-types'
 
 interface UseInfiniteScrollProps {
-  items: Queries.IndexPageQuery['allContentfulPost']['nodes']
+  items: Queries.IndexPageQuery['postCollection']['items']
   setItems: React.Dispatch<
-    React.SetStateAction<Queries.IndexPageQuery['allContentfulPost']['nodes']>
+    React.SetStateAction<Queries.IndexPageQuery['postCollection']['items']>
   >
   hasNextPage: boolean | undefined
   setHasNextPage: React.Dispatch<React.SetStateAction<boolean | undefined>>
@@ -22,32 +22,24 @@ const useInfiniteScroll = ({
   selectedCategory,
 }: UseInfiniteScrollProps) => {
   const fetchMorePosts = async () => {
-    console.log('call')
     if (!hasNextPage) return
 
     let variables
     let query
 
     if (selectedCategory !== 'All') {
-      query = `query IndexPage($skip: Int!, $limit: Int!, $category: String!) {
-        allContentfulPost(skip: $skip, limit: $limit, filter: { category: { eq:  $category} }) {
-          pageInfo {
-            pageCount
-            totalCount
-            currentPage
-            hasNextPage
-          }
-          nodes {
+      query = `query IndexPage($skip: Int!, $limit: Int!, $category: [String]!) {
+        postCollection(skip: $skip, limit: $limit, where: { category_contains_all: $category }) {
+          total
+          items {
             title
             category
             slug
             date
             thumbnail {
-              gatsbyImageData
+              url
             }
-            description {
-              description
-            }
+            description 
           }
         }
       }`
@@ -58,23 +50,16 @@ const useInfiniteScroll = ({
       }
     } else {
       query = `query IndexPage($skip: Int!, $limit: Int!) {
-            allContentfulPost(skip: $skip, limit: $limit) {
-              pageInfo {
-                pageCount
-                totalCount
-                currentPage
-                hasNextPage
-              }
-              nodes {
+            postCollection(skip: $skip, limit: $limit) {
+              total
+              items {
                 title
                 category
                 slug
                 date
+                description
                 thumbnail {
-                  gatsbyImageData
-                }
-                description {
-                  description
+                  url
                 }
               }
             }
@@ -86,19 +71,32 @@ const useInfiniteScroll = ({
       }
     }
 
-    const result = await fetch('/___graphql', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, variables }),
+    const url = new URL(
+      `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+    )
+    url.searchParams.append('query', query)
+    url.searchParams.append('variables', JSON.stringify(variables))
+    url.searchParams.append(
+      'access_token',
+      process.env.CONTENTFUL_ACCESS_TOKEN || '',
+    )
+
+    const result = await fetch(url.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
 
     const newData = await result.json()
-    const newPosts = newData.data.allContentfulPost.nodes
-    const newPageInfo = newData.data.allContentfulPost.pageInfo
+    const newPosts = newData.data.postCollection.items
+    const total = newData.data.postCollection.total
+    const newHasNextPage = items.length + 5 < total
+    const newCurrentPage = Math.floor(items.length / 5) + 1
 
     setItems([...items, ...newPosts])
-    setHasNextPage(newPageInfo.hasNextPage)
-    setCurrentPage(newPageInfo.currentPage)
+    setHasNextPage(newHasNextPage)
+    setCurrentPage(newCurrentPage)
   }
 
   return { hasNextPage, currentPage, fetchMorePosts }

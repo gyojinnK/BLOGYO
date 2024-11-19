@@ -1,12 +1,11 @@
 import { Link } from 'gatsby-link'
-import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import styled from 'styled-components'
 
 interface PostItemProps {
   title: string
   date: string
   category: string[]
-  thumbnail: IGatsbyImageData
+  thumbnail: { url: string }
   description: string
   slug: string
 }
@@ -93,11 +92,7 @@ const PostItem: React.FC<PostItemProps> = ({
   return (
     <Wrapper to={slug}>
       <Thumbnail>
-        <GatsbyImage
-          image={thumbnail}
-          alt={title as string}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
+        <img src={thumbnail.url} alt={title} />
       </Thumbnail>
 
       <Content>

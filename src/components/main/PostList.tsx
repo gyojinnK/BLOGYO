@@ -20,11 +20,14 @@ const Wrapper = styled.section`
 
 const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
   const [items, setItems] = useState<
-    Queries.IndexPageQuery['allContentfulPost']['nodes']
+    Queries.IndexPageQuery['postCollection']['items']
   >([])
   const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false)
   const [currentPage, setCurrentPage] = useState<number>(0)
-  const [ref, inView] = useInView({})
+  const [ref, inView] = useInView({
+    threshold: 0,
+    rootMargin: '100px',
+  })
   const { fetchMorePosts } = useInfiniteScroll({
     items,
     setItems,
@@ -57,8 +60,6 @@ const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
     }
   }, [inView])
 
-  console.log(items)
-
   return (
     <Wrapper>
       {items.map(({ title, date, category, thumbnail, description, slug }) => (
@@ -67,8 +68,8 @@ const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
           title={title as string}
           date={date as string}
           category={category as string[]}
-          thumbnail={thumbnail?.gatsbyImageData as IGatsbyImageData}
-          description={description?.description as string}
+          thumbnail={thumbnail as { url: string }}
+          description={description as string}
           slug={slug as string}
         />
       ))}
