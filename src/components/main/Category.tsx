@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Queries } from '../../types/graphql-types'
-
 interface CategoryProps {
   selectedCategory: string
   handleSelect: (category: string) => void
@@ -44,14 +43,14 @@ const Category: React.FC<CategoryProps> = ({
 
   const fetchCategories = async () => {
     const query = `
-          query MyQuery {
-            postCollection {
-              items {
-                category
-              }
-            }
+      query MyQuery {
+        postCollection {
+          items {
+            category
           }
-        `
+        }
+      }
+    `
 
     const url = new URL(
       `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
