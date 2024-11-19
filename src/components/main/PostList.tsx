@@ -6,6 +6,7 @@ import { IGatsbyImageData } from 'gatsby-plugin-image'
 import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 import { fetchAllPosts, fetchCategoryPosts } from '../../servers'
 import { Queries } from '../../types/graphql-types'
+import Loading from '../common/Loading'
 
 interface PostListProps {
   selectedCategory: string
@@ -24,11 +25,8 @@ const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
   >([])
   const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false)
   const [currentPage, setCurrentPage] = useState<number>(0)
-  const [ref, inView] = useInView({
-    threshold: 0,
-    rootMargin: '100px',
-  })
-  const { fetchMorePosts } = useInfiniteScroll({
+  const [ref, inView] = useInView({})
+  const { fetchMorePosts, isLoading } = useInfiniteScroll({
     items,
     setItems,
     hasNextPage,
@@ -51,6 +49,7 @@ const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
   }
 
   useEffect(() => {
+    setItems([])
     fetchDataHandler(selectedCategory)
   }, [selectedCategory])
 
@@ -73,6 +72,7 @@ const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
           slug={slug as string}
         />
       ))}
+      {items.length === 0 ? <Loading /> : isLoading && <Loading />}
       <div ref={ref}></div>
     </Wrapper>
   )

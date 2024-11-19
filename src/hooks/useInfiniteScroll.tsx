@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Queries } from '../types/graphql-types'
 
 interface UseInfiniteScrollProps {
@@ -21,6 +22,8 @@ const useInfiniteScroll = ({
   setCurrentPage,
   selectedCategory,
 }: UseInfiniteScrollProps) => {
+  const [isLoading, setIsLoading] = useState(false)
+
   const fetchMorePosts = async () => {
     if (!hasNextPage) return
 
@@ -81,13 +84,14 @@ const useInfiniteScroll = ({
       process.env.CONTENTFUL_ACCESS_TOKEN || '',
     )
 
+    setIsLoading(true)
+
     const result = await fetch(url.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     })
-
     const newData = await result.json()
     const newPosts = newData.data.postCollection.items
     const total = newData.data.postCollection.total
@@ -97,9 +101,11 @@ const useInfiniteScroll = ({
     setItems([...items, ...newPosts])
     setHasNextPage(newHasNextPage)
     setCurrentPage(newCurrentPage)
+
+    setIsLoading(false)
   }
 
-  return { hasNextPage, currentPage, fetchMorePosts }
+  return { isLoading, hasNextPage, currentPage, fetchMorePosts }
 }
 
 export default useInfiniteScroll
