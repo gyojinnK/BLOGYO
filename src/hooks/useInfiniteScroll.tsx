@@ -1,22 +1,28 @@
-import { useEffect, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
+import { Queries } from '../types/graphql-types'
 
 interface UseInfiniteScrollProps {
-  posts: Queries.IndexPageQuery['allContentfulPost']['nodes']
-  pageInfo: Queries.IndexPageQuery['allContentfulPost']['pageInfo']
+  items: Queries.IndexPageQuery['allContentfulPost']['nodes']
+  setItems: React.Dispatch<
+    React.SetStateAction<Queries.IndexPageQuery['allContentfulPost']['nodes']>
+  >
+  hasNextPage: boolean | undefined
+  setHasNextPage: React.Dispatch<React.SetStateAction<boolean | undefined>>
+  currentPage: number
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>
   selectedCategory: string
 }
 
 const useInfiniteScroll = ({
-  posts,
-  pageInfo,
+  items,
+  setItems,
+  hasNextPage,
+  currentPage,
+  setHasNextPage,
+  setCurrentPage,
   selectedCategory,
 }: UseInfiniteScrollProps) => {
-  const [items, setItems] = useState(posts)
-  const [hasNextPage, setHasNextPage] = useState(pageInfo.hasNextPage)
-  const [currentPage, setCurrentPage] = useState(pageInfo.currentPage)
-
   const fetchMorePosts = async () => {
+    console.log('call')
     if (!hasNextPage) return
 
     let variables
@@ -48,7 +54,7 @@ const useInfiniteScroll = ({
       variables = {
         skip: items.length,
         limit: 5,
-        category: selectedCategory !== 'All' ? selectedCategory : undefined,
+        category: selectedCategory,
       }
     } else {
       query = `query IndexPage($skip: Int!, $limit: Int!) {
@@ -95,7 +101,7 @@ const useInfiniteScroll = ({
     setCurrentPage(newPageInfo.currentPage)
   }
 
-  return { items, setItems, hasNextPage, currentPage, fetchMorePosts }
+  return { hasNextPage, currentPage, fetchMorePosts }
 }
 
 export default useInfiniteScroll

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { Queries } from '../../types/graphql-types'
 
 interface CategoryProps {
   selectedCategory: string

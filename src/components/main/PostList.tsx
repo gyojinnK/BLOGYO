@@ -4,10 +4,10 @@ import PostItem from './PostItem'
 import { useInView } from 'react-intersection-observer'
 import { IGatsbyImageData } from 'gatsby-plugin-image'
 import useInfiniteScroll from '../../hooks/useInfiniteScroll'
+import { fetchAllPosts, fetchCategoryPosts } from '../../api'
+import { Queries } from '../../types/graphql-types'
 
 interface PostListProps {
-  posts: Queries.IndexPageQuery['allContentfulPost']['nodes']
-  pageInfo: Queries.IndexPageQuery['allContentfulPost']['pageInfo']
   selectedCategory: string
 }
 
@@ -18,20 +18,37 @@ const Wrapper = styled.section`
   gap: 20px;
 `
 
-const PostList: React.FC<PostListProps> = ({
-  posts,
-  pageInfo,
-  selectedCategory,
-}) => {
-  const { items, setItems, fetchMorePosts } = useInfiniteScroll({
-    posts,
-    pageInfo,
+const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
+  const [items, setItems] = useState<
+    Queries.IndexPageQuery['allContentfulPost']['nodes']
+  >([])
+  const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false)
+  const [currentPage, setCurrentPage] = useState<number>(0)
+  const [ref, inView] = useInView({})
+  const { fetchMorePosts } = useInfiniteScroll({
+    items,
+    setItems,
+    hasNextPage,
+    setHasNextPage,
+    currentPage,
+    setCurrentPage,
     selectedCategory,
   })
-  const [ref, inView] = useInView({})
+
+  const fetchDataHandler = async (selectedCategory: string) => {
+    let data
+    if (selectedCategory === 'All') {
+      data = await fetchAllPosts()
+    } else {
+      data = await fetchCategoryPosts(selectedCategory)
+    }
+    setItems(data.posts)
+    setHasNextPage(data.pageInfo.hasNextPage)
+    setCurrentPage(data.pageInfo.currentPage)
+  }
 
   useEffect(() => {
-    fetchMorePosts()
+    fetchDataHandler(selectedCategory)
   }, [selectedCategory])
 
   useEffect(() => {
@@ -40,7 +57,7 @@ const PostList: React.FC<PostListProps> = ({
     }
   }, [inView])
 
-  console.log(selectedCategory)
+  console.log(items)
 
   return (
     <Wrapper>
