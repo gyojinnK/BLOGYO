@@ -1,3 +1,5 @@
+import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '../../config'
+
 export const fetchAllPosts = async (skip: number = 0, limit: number = 5) => {
   const query = `
     query MyQuery {
@@ -18,13 +20,10 @@ export const fetchAllPosts = async (skip: number = 0, limit: number = 5) => {
   `
 
   const url = new URL(
-    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+    `https://graphql.contentful.com/content/v1/spaces/${CONTENTFUL_SPACE_ID}`,
   )
   url.searchParams.append('query', query)
-  url.searchParams.append(
-    'access_token',
-    process.env.CONTENTFUL_ACCESS_TOKEN || '',
-  )
+  url.searchParams.append('access_token', CONTENTFUL_ACCESS_TOKEN || '')
 
   const result = await fetch(url.toString(), {
     method: 'GET',

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Queries } from '../types/graphql-types'
+import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '../../config'
 
 interface UseInfiniteScrollProps {
   items: Queries.IndexPageQuery['postCollection']['items']
@@ -75,14 +76,11 @@ const useInfiniteScroll = ({
     }
 
     const url = new URL(
-      `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+      `https://graphql.contentful.com/content/v1/spaces/${CONTENTFUL_SPACE_ID}`,
     )
     url.searchParams.append('query', query)
     url.searchParams.append('variables', JSON.stringify(variables))
-    url.searchParams.append(
-      'access_token',
-      process.env.CONTENTFUL_ACCESS_TOKEN || '',
-    )
+    url.searchParams.append('access_token', CONTENTFUL_ACCESS_TOKEN || '')
 
     setIsLoading(true)
 
