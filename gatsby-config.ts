@@ -1,5 +1,10 @@
 import type { GatsbyConfig } from 'gatsby'
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from './config'
+import dotenv from 'dotenv'
+
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
 
 const SITE_URL = `https://blogyo.vercel.app`
 
@@ -15,8 +20,8 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-source-contentful`,
       options: {
-        accessToken: CONTENTFUL_ACCESS_TOKEN,
-        spaceId: CONTENTFUL_SPACE_ID,
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+        spaceId: process.env.CONTENTFUL_SPACE_ID,
       },
     },
     'gatsby-plugin-image',

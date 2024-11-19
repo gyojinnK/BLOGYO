@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Queries } from '../../types/graphql-types'
-import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '../../../config'
 interface CategoryProps {
   selectedCategory: string
   handleSelect: (category: string) => void
@@ -54,10 +53,13 @@ const Category: React.FC<CategoryProps> = ({
     `
 
     const url = new URL(
-      `https://graphql.contentful.com/content/v1/spaces/${CONTENTFUL_SPACE_ID}`,
+      `https://graphql.contentful.com/content/v1/spaces/${process.env.GATSBY_CONTENTFUL_SPACE_ID}`,
     )
     url.searchParams.append('query', query)
-    url.searchParams.append('access_token', CONTENTFUL_ACCESS_TOKEN || '')
+    url.searchParams.append(
+      'access_token',
+      process.env.GATSBY_CONTENTFUL_ACCESS_TOKEN || '',
+    )
 
     const result = await fetch(url.toString(), {
       method: 'GET',
