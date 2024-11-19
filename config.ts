@@ -4,5 +4,6 @@ dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
-export const CONTENTFUL_SPACE_ID = process.env.CONTENTFUL_SPACE_ID
-export const CONTENTFUL_ACCESS_TOKEN = process.env.CONTENTFUL_ACCESS_TOKEN
+export const CONTENTFUL_SPACE_ID = process.env.GATSBY_CONTENTFUL_SPACE_ID
+export const CONTENTFUL_ACCESS_TOKEN =
+  process.env.GATSBY_CONTENTFUL_ACCESS_TOKEN
