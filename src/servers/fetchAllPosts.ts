@@ -1,27 +1,24 @@
-export const fetchAllPosts = async () => {
-  const result = await fetch('https://blogyo.vercel.app/___graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
-    },
-    body: JSON.stringify({
-      query: `
+export const fetchAllPosts = async (skip: number = 0, limit: number = 5) => {
+  const result = await fetch(
+    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        query: `
         query MyQuery {
-          allContentfulPost (limit: 5){
-            pageInfo {
-              pageCount
-              totalCount
-              currentPage
-              hasNextPage
-            }     
-            nodes {
+          postCollection (limit: 5){
+            total    
+            items {
               title
               category
               slug
               date
               thumbnail {
-                gatsbyImageData
+                url
               }
               description {
                 description
@@ -30,13 +27,19 @@ export const fetchAllPosts = async () => {
           }
         }
       `,
-    }),
-  })
+      }),
+    },
+  )
 
   const data = await result.json()
-  console.log(data)
+  const total = data.data.postCollection.total
+  const hasNextPage = skip + limit < total
+  const currentPage = Math.floor(skip / limit) + 1
+
   return {
-    posts: data.data.allContentfulPost.nodes,
-    pageInfo: data.data.allContentfulPost.pageInfo,
+    posts: data.data.postCollection.items,
+    total,
+    hasNextPage,
+    currentPage,
   }
 }

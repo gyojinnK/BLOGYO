@@ -43,8 +43,8 @@ const PostList: React.FC<PostListProps> = ({ selectedCategory }) => {
       data = await fetchCategoryPosts(selectedCategory)
     }
     setItems(data.posts)
-    setHasNextPage(data.pageInfo.hasNextPage)
-    setCurrentPage(data.pageInfo.currentPage)
+    setHasNextPage(data.hasNextPage)
+    setCurrentPage(data.currentPage)
   }
 
   useEffect(() => {

@@ -1,41 +1,52 @@
-export const fetchCategoryPosts = async (category: string) => {
-  const result = await fetch('https://blogyo.vercel.app/___graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
-    },
-    body: JSON.stringify({
-      query: `
-        query MyQuery {
-          allContentfulPost (limit: 5, filter: { category: { eq: "${category}" } }) {
-            pageInfo {
-              pageCount
-              totalCount
-              currentPage
-              hasNextPage
-            }     
-            nodes {
+export const fetchCategoryPosts = async (
+  category: string,
+  skip: number = 0,
+  limit: number = 5,
+) => {
+  const result = await fetch(
+    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        query: `
+        query MyQuery($category: String!, $skip: Int!, $limit: Int!) {
+          postCollection(limit: $limit, skip: $skip, where: { category_contains: $category }) {
+            total
+            items {
               title
               category
               slug
               date
               thumbnail {
-                gatsbyImageData
+                url
               }
-              description {
-                description
-              }
+              description
             }
           }
         }
       `,
-    }),
-  })
+        variables: {
+          category,
+          skip,
+          limit,
+        },
+      }),
+    },
+  )
 
   const data = await result.json()
+  const total = data.data.postCollection.total
+  const hasNextPage = skip + limit < total
+  const currentPage = Math.floor(skip / limit) + 1
+
   return {
-    posts: data.data.allContentfulPost.nodes,
-    pageInfo: data.data.allContentfulPost.pageInfo,
+    posts: data.data.postCollection.items,
+    total,
+    hasNextPage,
+    currentPage,
   }
 }
