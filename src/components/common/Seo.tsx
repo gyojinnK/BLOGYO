@@ -52,6 +52,10 @@ const Seo = ({ children, description, image, pathname, title }: SEOProps) => {
       <meta property="og:url" content={metadata.siteUrl} />
       <meta property="og:site_name" content={metadata.title} />
 
+      <meta
+        name="google-site-verification"
+        content="PCc2EKaU6R5-uyxegUMTkoazeBmcG41FrmNmfRUYhH4"
+      />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={metadata.title} />
       <meta name="twitter:description" content={metadata.description} />
