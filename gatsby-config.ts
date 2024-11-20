@@ -1,5 +1,4 @@
 import type { GatsbyConfig } from 'gatsby'
-import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from './config'
 import dotenv from 'dotenv'
 
 dotenv.config({
@@ -48,6 +47,13 @@ const config: GatsbyConfig = {
       resolve: 'gatsby-plugin-robots-txt',
       options: {
         policy: [{ userAgent: '*', allow: '/' }],
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-gtag',
+      options: {
+        trackingId: process.env.GOOGLE_ANALYTICS_ID,
+        head: true,
       },
     },
     {
