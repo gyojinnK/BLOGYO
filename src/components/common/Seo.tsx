@@ -56,6 +56,11 @@ const Seo = ({ children, description, image, pathname, title }: SEOProps) => {
         name="google-site-verification"
         content="PCc2EKaU6R5-uyxegUMTkoazeBmcG41FrmNmfRUYhH4"
       />
+      <meta
+        name="naver-site-verification"
+        content="31ce3aff675fc6a14ad2430fb4bb7da8aa769104"
+      />
+
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={metadata.title} />
       <meta name="twitter:description" content={metadata.description} />
