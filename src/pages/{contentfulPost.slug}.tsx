@@ -56,15 +56,6 @@ export const query = graphql`
       date
       content {
         raw
-        references {
-          ... on ContentfulAsset {
-            contentful_id
-            title
-            description
-            gatsbyImageData(width: 774)
-            __typename
-          }
-        }
       }
     }
   }

@@ -1,5 +1,6 @@
 import { Link } from 'gatsby-link'
 import styled from 'styled-components'
+import { dateFormatter } from '../../utils/dateFormatter'
 
 interface PostItemProps {
   title: string
@@ -92,12 +93,21 @@ const PostItem: React.FC<PostItemProps> = ({
   return (
     <Wrapper to={slug}>
       <Thumbnail>
-        <img src={thumbnail.url} alt={title} />
+        <img
+          src={thumbnail.url}
+          alt={title}
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center center',
+            width: '100%',
+            height: '100%',
+          }}
+        />
       </Thumbnail>
 
       <Content>
         <Title>{title}</Title>
-        <Date>{date}</Date>
+        <Date>{dateFormatter(date)}</Date>
         <Category>
           {category?.map(category => <div key={category}>#{category}</div>)}
         </Category>
