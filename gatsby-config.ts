@@ -53,7 +53,7 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        icon: 'src/images/favicon/favicon.ico',
+        icon: 'src/images/favicon/favicon-16x16.png',
         icons: [
           {
             src: '/favicon/favicon-16x16.png',
@@ -93,10 +93,6 @@ const config: GatsbyConfig = {
           {
             src: '/favicon/android-icon-192x192.png',
             sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: '/favicon/apple-icon.png',
             type: 'image/png',
           },
           {
